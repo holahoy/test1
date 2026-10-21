@@ -1,5 +1,5 @@
 (() => {
-  pass();
+  //pass();
   
   document.getElementById(`bibi-overlay`)?.remove();
   document.getElementById(`minesweeper-overlay`)?.remove();
