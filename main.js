@@ -73,7 +73,11 @@
         <h1>🇮🇱 עם ישראל חי 🇮🇱</h1>
         <div class='stage'>
           <div class='bibi'>
-            <div class='face'>👨🏻‍💼</div>
+            <img
+  src='https://commons.wikimedia.org/wiki/Special:FilePath/Benjamin_Netanyahu_portrait.jpg'
+  alt='בנימין נתניהו'
+  style='display:block;width:clamp(120px,40vw,230px);height:auto;border-radius:20px;margin:0 auto 12px'
+>
             <div class='name'>בנימין נתניהו</div>
           </div>
         </div>
