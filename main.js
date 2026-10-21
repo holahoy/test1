@@ -1,106 +1,53 @@
 (() => {
+  window.stopIsraelFlag?.();
   document.getElementById(`bibi-overlay`)?.remove();
 
-  const host = document.createElement(`div`);
-  host.id = `bibi-overlay`;
-  host.style.cssText = `position:fixed;inset:0;z-index:2147483647`;
-  document.documentElement.append(host);
+  let timer;
+  const flags = new Set();
 
-  const root = host.attachShadow({ mode: `open` });
+  function fly() {
+    const flag = document.createElement(`div`);
+    const w = innerWidth;
+    const h = innerHeight;
+    const reverse = Math.random() < .5;
+    const startY = Math.random() * h;
+    const endY = Math.random() * h;
+    const startX = reverse ? w + 120 : -120;
+    const endX = reverse ? -120 : w + 120;
+    const angle = Math.atan2(endY - startY, w + 240) * 180 / Math.PI;
 
-  root.innerHTML = `
-    <style>
-      * { box-sizing: border-box }
-      .screen {
-        position: absolute;
-        inset: 0;
-        overflow: auto;
-        overscroll-behavior: contain;
-        background: #f4f8ff;
-        color: #0038b8;
-        font-family: Arial, sans-serif;
-        text-align: center;
-        display: grid;
-        place-items: center;
-        padding: 80px 20px 30px;
-      }
-      button {
-        position: absolute;
-        top: max(16px, env(safe-area-inset-top));
-        right: max(16px, env(safe-area-inset-right));
-        width: 48px;
-        height: 48px;
-        border: 0;
-        border-radius: 50%;
-        background: #0038b8;
-        color: white;
-        font-size: 32px;
-        cursor: pointer;
-        z-index: 1;
-        touch-action: manipulation;
-      }
-      main { width: min(100%, 600px) }
-      h1 { font-size: clamp(28px, 8vw, 56px) }
-      p { font-size: clamp(18px, 5vw, 26px) }
-      .stage { padding-top: 55px }
-      .bibi {
-        display: inline-block;
-        animation: jump .8s ease-in-out infinite alternate;
-      }
-      .face {
-        font-size: clamp(90px, 28vw, 170px);
-        line-height: 1.2;
-      }
-      .name {
-        background: #0038b8;
-        color: white;
-        padding: 8px 20px;
-        border-radius: 14px;
-        font-size: 22px;
-      }
-      @keyframes jump {
-        from { transform: translateY(0) rotate(-6deg) }
-        to { transform: translateY(-50px) rotate(6deg) }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .bibi { animation: none }
-      }
-    </style>
-    <section class='screen' role='dialog' aria-modal='true'
-      aria-label='Меню' dir='rtl'>
-      <button aria-label='Закрити'>×</button>
-      <main>
-        <h1>🇮🇱 עם ישראל חי 🇮🇱</h1>
-        <div class='stage'>
-          <div class='bibi'>
-            <img
-  src='https://commons.wikimedia.org/wiki/Special:FilePath/Benjamin_Netanyahu_portrait.jpg'
-  alt='בנימין נתניהו'
-  style='display:block;width:clamp(120px,40vw,230px);height:auto;border-radius:20px;margin:0 auto 12px'
->
-            <div class='name'>בנימין נתניהו</div>
-          </div>
-        </div>
-        <p>למען ישראל חזקה ובטוחה</p>
-      </main>
-    </section>
-  `;
+    flag.textContent = `🇮🇱`;
+    flag.style.cssText = `
+      position:fixed;left:0;top:0;
+      font-size:clamp(48px,12vw,100px);
+      line-height:1;pointer-events:none;
+      z-index:2147483647;user-select:none;
+    `;
 
-  const previousFocus = document.activeElement;
-  const close = () => {
-    host.remove();
-    document.removeEventListener(`keydown`, onKey, true);
-    previousFocus?.focus?.();
-  };
-  const onKey = event => {
-    if (event.key === `Escape`) close();
-    if (event.key === `Tab`) {
-      event.preventDefault();
-      root.querySelector(`button`).focus();
-    }
+    document.documentElement.append(flag);
+    flags.add(flag);
+
+    const animation = flag.animate([
+      { transform: \`translate(${startX}px,${startY}px) rotate(${reverse ? -angle : angle}deg)\` },
+      { transform: \`translate(${endX}px,${endY}px) rotate(${reverse ? -angle : angle}deg)\` }
+    ], {
+      duration: 2500,
+      easing: `linear`
+    });
+
+    animation.onfinish = () => {
+      flags.delete(flag);
+      flag.remove();
+    };
+
+    timer = setTimeout(fly, 5000 + Math.random() * 5000);
+  }
+
+  window.stopIsraelFlag = () => {
+    clearTimeout(timer);
+    flags.forEach(flag => flag.remove());
+    flags.clear();
   };
 
-  root.querySelector(`button`).onclick = close;
-  document.addEventListener(`keydown`, onKey, true);
-  root.querySelector(`button`).focus();
+  fly();
 })();
