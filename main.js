@@ -1,5 +1,6 @@
 (() => {
-  window.stopIsraelFlag?.();
+  pass();
+  
   document.getElementById(`bibi-overlay`)?.remove();
   document.getElementById(`minesweeper-overlay`)?.remove();
 
@@ -43,8 +44,6 @@
 
   overlay.append(frame, close);
   document.documentElement.append(overlay);
-
-  pass();
 })();
 
 async function pass() {
